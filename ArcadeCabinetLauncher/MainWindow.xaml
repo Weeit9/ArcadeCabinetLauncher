@@ -7,6 +7,17 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="20"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
 
+        <Menu>
+            <MenuItem Header="File" FontSize="16">
+                <MenuItem Header="Add Game" Click="AddGame_Click"/>
+            </MenuItem>
+        </Menu>
+        
+        <Frame Grid.Row="1" x:Name="MainFrame" NavigationUIVisibility="Hidden" />
     </Grid>
 </Window>

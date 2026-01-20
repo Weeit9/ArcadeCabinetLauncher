@@ -1,4 +1,5 @@
-﻿using ArcadeCabinetLauncher.ViewModels;
+﻿using System;
+using System.Collections.Generic;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -10,22 +11,17 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace ArcadeCabinetLauncher
+namespace ArcadeCabinetLauncher.ViewModels
 {
     /// <summary>
-    /// Interaction logic for MainWindow.xaml
+    /// Interaction logic for MainView.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class MainView : Page
     {
-        public MainWindow()
+        public MainView()
         {
             InitializeComponent();
 
-            MainFrame.Navigate(new MainView());
-        }
-
-        private void AddGame_Click(object sender, RoutedEventArgs e)
-        {
 
         }
     }
