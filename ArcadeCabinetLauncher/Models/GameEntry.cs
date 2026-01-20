@@ -6,5 +6,10 @@ namespace ArcadeCabinetLauncher.Models
 {
     internal class GameEntry
     {
+        public string Name { get; set; }
+        public string ExecutablePath {  get; set; }
+
+        public string ThumbnailPath { get; set; }
+
     }
 }

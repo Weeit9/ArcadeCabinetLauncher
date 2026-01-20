@@ -1,15 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+using ArcadeCabinetLauncher.Models;
+using Microsoft.Win32;
 
 namespace ArcadeCabinetLauncher.ViewModels
 {
@@ -21,8 +13,28 @@ namespace ArcadeCabinetLauncher.ViewModels
         public MainView()
         {
             InitializeComponent();
+        }
+        private void AddGame_Click(object sender, RoutedEventArgs e)
+        {
+            OpenFileDialog gameToAdd = new OpenFileDialog();
+            gameToAdd.ShowDialog();
 
+            bool? success = gameToAdd.ShowDialog();
+            if (success == true)
+            {
 
+                var game = new GameEntry
+                {
+                    Name = gameToAdd.FileName,
+                    ExecutablePath = gameToAdd.FileName
+                };
+
+            }
+
+            else
+            {
+                //no fill picked
+            }
         }
     }
 }

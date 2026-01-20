@@ -23,10 +23,5 @@ namespace ArcadeCabinetLauncher
 
             MainFrame.Navigate(new MainView());
         }
-
-        private void AddGame_Click(object sender, RoutedEventArgs e)
-        {
-
-        }
     }
 }

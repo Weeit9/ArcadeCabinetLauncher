@@ -9,18 +9,33 @@
       Title="MainView">
 
     <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="100"/>
-            <ColumnDefinition />
-            <ColumnDefinition />
-            <ColumnDefinition />
-
-        </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="100" />
-            <RowDefinition Height="100" />
-            <RowDefinition Height="100" />
+            <RowDefinition Height="30" />
+            <RowDefinition/>
+            
         </Grid.RowDefinitions>
-        <Rectangle Grid.Row="0" Fill="Red"/>
+
+        <Menu Grid.Row="0">
+            <MenuItem Header="File" FontSize="16">
+                <MenuItem Header="Add Game" Click="AddGame_Click"/>
+            </MenuItem>
+        </Menu>
+
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="100"/>
+                <ColumnDefinition />
+                <ColumnDefinition />
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+            
+            <Grid.RowDefinitions>
+                <RowDefinition Height="100" />
+                <RowDefinition Height="100" />
+                <RowDefinition Height="100" />
+            </Grid.RowDefinitions>
+            
+            <Rectangle Grid.Row="0" Fill="Red"/>
+        </Grid>
     </Grid>
 </Page>
