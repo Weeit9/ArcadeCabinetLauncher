@@ -17,11 +17,11 @@
 
         <Menu Grid.Row="0">
             <MenuItem Header="File" FontSize="16">
-                <MenuItem Header="Add Game" Click="AddGame_Click"/>
+                <MenuItem Header="Add Game" Command="{Binding AddGameCommand}"/>
             </MenuItem>
         </Menu>
 
-        <ListView Name="GamesLV" SelectionMode="Single" Grid.Row="1" ItemsSource="{Binding GamesList}">
+        <ListView Name="GamesLV" SelectionMode="Single" Grid.Row="1" ItemsSource="{Binding Games}" MouseDoubleClick="GameLVDoubleClick">
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <TextBlock Text="{Binding Name}" />
