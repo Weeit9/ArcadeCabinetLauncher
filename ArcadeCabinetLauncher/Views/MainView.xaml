@@ -18,13 +18,34 @@
         <Menu Grid.Row="0">
             <MenuItem Header="File" FontSize="16">
                 <MenuItem Header="Add Game" Command="{Binding AddGameCommand}"/>
+                <MenuItem Header="Start Game" Command="{Binding StartGameCommand}"/>
+
             </MenuItem>
         </Menu>
 
-        <ListView Name="GamesLV" SelectionMode="Single" Grid.Row="1" ItemsSource="{Binding Games}" MouseDoubleClick="GameLVDoubleClick">
+        <ListView Name="GamesLV" SelectionMode="Single" Grid.Row="1" ItemsSource="{Binding Games}" SelectedItem="{Binding SelectedGame, Mode=TwoWay}">
             <ListView.ItemTemplate>
                 <DataTemplate>
-                    <TextBlock Text="{Binding Name}" />
+                    <Grid ShowGridLines="True">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="50"/>
+                            <ColumnDefinition Width="30*"/>
+                            <ColumnDefinition Width="50*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <Button Grid.Column="0"
+                                Width="48"
+                                Height="48"
+                                Padding="0"
+                                Background="Transparent"
+                                Command="{Binding StartGameCommand, RelativeSource={RelativeSource AncestorType=ListView}}">
+                            <Image Source="{Binding ThumbnailPath}" Stretch="Uniform" IsHitTestVisible="False"></Image>
+                        </Button>
+
+                        <TextBlock Grid.Column="1" Text="{Binding Name}" Padding="10"/>
+
+                        <TextBlock Grid.Column="2" Text="{Binding Description}" Padding="10"/>
+                    </Grid>
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>

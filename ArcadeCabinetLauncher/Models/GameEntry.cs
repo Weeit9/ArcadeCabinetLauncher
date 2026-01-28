@@ -9,6 +9,7 @@ namespace ArcadeCabinetLauncher.Models
         public string Name { get; set; }
         public string ExecutablePath {  get; set; }
         public string ThumbnailPath { get; set; }
+        public string Description { get; set; }
 
     }
 }
