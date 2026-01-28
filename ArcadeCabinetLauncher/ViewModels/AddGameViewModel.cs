@@ -13,6 +13,7 @@ namespace ArcadeCabinetLauncher.ViewModels
     class AddGameViewModel : ViewModelBase
     {
         public string Name { get; set; } = "";
+        public string GameMaker { get; set; } = "";
         public string ExecutablePath { get; set; } = "";
         public string ThumbnailPath { get; set; } = "";
         public string Description { get; set; } = "";
@@ -76,6 +77,7 @@ namespace ArcadeCabinetLauncher.ViewModels
             Result = new GameEntry
             {
                 Name = Name,
+                GameMaker = GameMaker,
                 ExecutablePath = ExecutablePath,
                 ThumbnailPath = ThumbnailPath,
                 Description = Description

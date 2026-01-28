@@ -7,6 +7,7 @@ namespace ArcadeCabinetLauncher.Models
     public class GameEntry
     {
         public string Name { get; set; }
+        public string GameMaker { get; set; }
         public string ExecutablePath {  get; set; }
         public string ThumbnailPath { get; set; }
         public string Description { get; set; }

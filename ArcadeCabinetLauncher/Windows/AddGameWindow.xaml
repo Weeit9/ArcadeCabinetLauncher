@@ -11,6 +11,9 @@
             <TextBlock Text="Game Name"/>
             <TextBox Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}"/>
 
+            <TextBlock Text="Game Maker Name"/>
+            <TextBox Text="{Binding GameMaker, UpdateSourceTrigger=PropertyChanged}"/>
+
             <TextBlock Text="Executable"/>
             <StackPanel Orientation="Horizontal">
                 <TextBlock Text="{Binding ExecutablePath}" Width="250"/>

@@ -29,8 +29,9 @@
                     <Grid ShowGridLines="True">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="50"/>
-                            <ColumnDefinition Width="30*"/>
-                            <ColumnDefinition Width="50*"/>
+                            <ColumnDefinition Width="100"/>
+                            <ColumnDefinition Width="100"/>
+                            <ColumnDefinition Width="500"/>
                         </Grid.ColumnDefinitions>
 
                         <Button Grid.Column="0"
@@ -44,7 +45,9 @@
 
                         <TextBlock Grid.Column="1" Text="{Binding Name}" Padding="10"/>
 
-                        <TextBlock Grid.Column="2" Text="{Binding Description}" Padding="10"/>
+                        <TextBlock Grid.Column="2" Text="{Binding GameMaker}" Padding="10"/>
+
+                        <TextBlock Grid.Column="3" Text="{Binding Description}" Padding="10"/>
                     </Grid>
                 </DataTemplate>
             </ListView.ItemTemplate>
