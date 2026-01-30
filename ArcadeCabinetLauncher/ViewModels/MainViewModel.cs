@@ -20,9 +20,12 @@ namespace ArcadeCabinetLauncher.ViewModels
     {
         private readonly GameService _gameService = new();
         public ObservableCollection<GameEntry> Games { get; }
-        public GameEntry SelectedGame { get; set; }
+        public bool inAdminMode { get; set; }
+        public string adminButtonText { get; set; }
         public ICommand AddGameCommand { get; }
         public ICommand StartGameCommand { get; }
+        public ICommand RemoveGameCommand { get; }
+        public ICommand SwitchAdminCommand { get; }
 
         public MainViewModel()
         {
@@ -30,9 +33,18 @@ namespace ArcadeCabinetLauncher.ViewModels
 
             Games = new ObservableCollection<GameEntry>(loadedGames);
 
+            inAdminMode = false;
+            adminButtonText = "Enter Admin Mode";
+
             AddGameCommand = new RelayCommand(AddGame);
 
-            StartGameCommand = new RelayCommand(StartGame, () => true);
+            StartGameCommand = new RelayCommandGeneric<GameEntry>(StartGame);
+
+            RemoveGameCommand = new RelayCommandGeneric<GameEntry>(RemoveGame);
+
+            SwitchAdminCommand = new RelayCommand(SwitchAdmin);
+
+
 
         }
 
@@ -50,30 +62,14 @@ namespace ArcadeCabinetLauncher.ViewModels
                 Games.Add(vm.Result);
                 _gameService.SaveGames(Games);
             }
-            //OpenFileDialog gameToAdd = new OpenFileDialog();
-
-            //bool? success = gameToAdd.ShowDialog();
-            //if (success == true)
-            //{
-
-            //    var game = new GameEntry
-            //    {
-            //        Name = gameToAdd.FileName,
-            //        ExecutablePath = gameToAdd.FileName,
-            //        ThumbnailPath = "C:\\Users\\Wyatt\\Pictures\\Screenshots\\Screenshot 2025-05-27 014340.png",
-            //    };
-
-            //    Games.Add(game);
-            //    _gameService.SaveGames(Games);
-            //}
         }
 
-        private void StartGame() 
+        private void StartGame(GameEntry game) 
         {
-            if (SelectedGame == null)
+            if (game == null)
                 return;
 
-            if (!File.Exists(SelectedGame.ExecutablePath))
+            if (!File.Exists(game.ExecutablePath))
             {
                 // optional: handle missing exe
                 return;
@@ -81,9 +77,36 @@ namespace ArcadeCabinetLauncher.ViewModels
 
             Process.Start(new ProcessStartInfo
             {
-                FileName = SelectedGame.ExecutablePath,
+                FileName = game.ExecutablePath,
                 UseShellExecute = true
             });
+        }
+
+        private void RemoveGame(GameEntry game)
+        {
+            Games.Remove(game);
+            _gameService.SaveGames(Games);
+        }
+
+        private void SwitchAdmin()
+        {
+            if (inAdminMode == false)
+            {
+                inAdminMode = true;
+                adminButtonText = "Exit Admin Mode";
+
+                OnPropertyChanged(nameof(inAdminMode));
+                OnPropertyChanged(nameof(adminButtonText));
+            }
+            else if (inAdminMode == true)
+            {
+                inAdminMode = false;
+                adminButtonText = "Enter Admin Mode";
+
+                OnPropertyChanged(nameof(inAdminMode));
+                OnPropertyChanged(nameof(adminButtonText));
+            }
+
         }
     }
 }

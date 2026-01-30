@@ -36,6 +36,5 @@ namespace ArcadeCabinetLauncher.Services
                 );
             File.WriteAllText(gamesFilePath, json);
         }
-        
     }
 }
