@@ -20,12 +20,15 @@ namespace ArcadeCabinetLauncher.ViewModels
     {
         private readonly GameService _gameService = new();
         public ObservableCollection<GameEntry> Games { get; }
+
+        
         public bool inAdminMode { get; set; }
         public string adminButtonText { get; set; }
         public ICommand AddGameCommand { get; }
         public ICommand StartGameCommand { get; }
         public ICommand RemoveGameCommand { get; }
         public ICommand SwitchAdminCommand { get; }
+        public ICommand ExitCommand { get; }
 
         public MainViewModel()
         {
@@ -34,6 +37,7 @@ namespace ArcadeCabinetLauncher.ViewModels
             Games = new ObservableCollection<GameEntry>(loadedGames);
 
             inAdminMode = false;
+
             adminButtonText = "Enter Admin Mode";
 
             AddGameCommand = new RelayCommand(AddGame);
@@ -44,7 +48,7 @@ namespace ArcadeCabinetLauncher.ViewModels
 
             SwitchAdminCommand = new RelayCommand(SwitchAdmin);
 
-
+            ExitCommand = new RelayCommand(Exit);
 
         }
 
@@ -92,13 +96,23 @@ namespace ArcadeCabinetLauncher.ViewModels
         {
             if (inAdminMode == false)
             {
-                inAdminMode = true;
-                adminButtonText = "Exit Admin Mode";
+                var vm = new AdminLoginViewModel();
+                var window = new AdminLoginWindow
+                {
+                    DataContext = vm,
+                    Owner = Application.Current.MainWindow
+                };
 
-                OnPropertyChanged(nameof(inAdminMode));
-                OnPropertyChanged(nameof(adminButtonText));
+                if (window.ShowDialog() == true && vm.IsAuthenticated == true)
+                {
+                    inAdminMode = true;
+                    adminButtonText = "Exit Admin Mode";
+
+                    OnPropertyChanged(nameof(inAdminMode));
+                    OnPropertyChanged(nameof(adminButtonText));
+                }
             }
-            else if (inAdminMode == true)
+            else
             {
                 inAdminMode = false;
                 adminButtonText = "Enter Admin Mode";
@@ -107,6 +121,11 @@ namespace ArcadeCabinetLauncher.ViewModels
                 OnPropertyChanged(nameof(adminButtonText));
             }
 
+        }
+
+        private void Exit() 
+        {
+            Application.Current.Shutdown();
         }
     }
 }

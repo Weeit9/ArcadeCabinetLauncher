@@ -1,4 +1,5 @@
 ﻿using ArcadeCabinetLauncher.ViewModels;
+using System.ComponentModel;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -20,8 +21,17 @@ namespace ArcadeCabinetLauncher
         public MainWindow()
         {
             InitializeComponent();
+            Closing += MainWindow_Closing;
 
             MainFrame.Navigate(new MainView());
+        }
+
+        private void MainWindow_Closing(object? sender, CancelEventArgs e)
+        {
+            if (!inAdminMode)
+            {
+                e.Cancel = true;
+            }
         }
     }
 }
