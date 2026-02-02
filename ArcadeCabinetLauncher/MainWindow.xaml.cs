@@ -18,20 +18,19 @@ namespace ArcadeCabinetLauncher
     /// </summary>
     public partial class MainWindow : Window
     {
+        private MainWindowViewModel ViewModel { get; }
         public MainWindow()
         {
             InitializeComponent();
-            Closing += MainWindow_Closing;
+            ViewModel = new MainWindowViewModel();
+            DataContext = ViewModel;
 
-            MainFrame.Navigate(new MainView());
-        }
-
-        private void MainWindow_Closing(object? sender, CancelEventArgs e)
-        {
-            if (!inAdminMode)
+            MainFrame.Navigate(new MainView
             {
-                e.Cancel = true;
-            }
+                DataContext = new MainViewModel(ViewModel)
+            });
         }
+
+        
     }
 }

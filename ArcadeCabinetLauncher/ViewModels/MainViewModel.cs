@@ -21,54 +21,32 @@ namespace ArcadeCabinetLauncher.ViewModels
         private readonly GameService _gameService = new();
         public ObservableCollection<GameEntry> Games { get; }
 
-        
-        public bool inAdminMode { get; set; }
-        public string adminButtonText { get; set; }
-        public ICommand AddGameCommand { get; }
-        public ICommand StartGameCommand { get; }
         public ICommand RemoveGameCommand { get; }
-        public ICommand SwitchAdminCommand { get; }
-        public ICommand ExitCommand { get; }
 
-        public MainViewModel()
+        public ICommand StartGameCommand { get; }
+
+        public MainWindowViewModel App { get; }
+
+        public MainViewModel(MainWindowViewModel app)
         {
+            App = app;
+
             var loadedGames = _gameService.LoadGames();
 
             Games = new ObservableCollection<GameEntry>(loadedGames);
 
-            inAdminMode = false;
-
-            adminButtonText = "Enter Admin Mode";
-
-            AddGameCommand = new RelayCommand(AddGame);
-
-            StartGameCommand = new RelayCommandGeneric<GameEntry>(StartGame);
-
             RemoveGameCommand = new RelayCommandGeneric<GameEntry>(RemoveGame);
 
-            SwitchAdminCommand = new RelayCommand(SwitchAdmin);
-
-            ExitCommand = new RelayCommand(Exit);
-
+            StartGameCommand = new RelayCommandGeneric<GameEntry>(StartGame);
         }
 
-        private void AddGame()
+        private void RemoveGame(GameEntry game)
         {
-            var vm = new AddGameViewModel();
-            var window = new AddGameWindow
-            {
-                DataContext = vm,
-                Owner = Application.Current.MainWindow
-            };
-
-            if (window.ShowDialog() == true && vm.Result != null)
-            {
-                Games.Add(vm.Result);
-                _gameService.SaveGames(Games);
-            }
+            Games.Remove(game);
+            _gameService.SaveGames(Games);
         }
 
-        private void StartGame(GameEntry game) 
+        private void StartGame(GameEntry game)
         {
             if (game == null)
                 return;
@@ -86,46 +64,5 @@ namespace ArcadeCabinetLauncher.ViewModels
             });
         }
 
-        private void RemoveGame(GameEntry game)
-        {
-            Games.Remove(game);
-            _gameService.SaveGames(Games);
-        }
-
-        private void SwitchAdmin()
-        {
-            if (inAdminMode == false)
-            {
-                var vm = new AdminLoginViewModel();
-                var window = new AdminLoginWindow
-                {
-                    DataContext = vm,
-                    Owner = Application.Current.MainWindow
-                };
-
-                if (window.ShowDialog() == true && vm.IsAuthenticated == true)
-                {
-                    inAdminMode = true;
-                    adminButtonText = "Exit Admin Mode";
-
-                    OnPropertyChanged(nameof(inAdminMode));
-                    OnPropertyChanged(nameof(adminButtonText));
-                }
-            }
-            else
-            {
-                inAdminMode = false;
-                adminButtonText = "Enter Admin Mode";
-
-                OnPropertyChanged(nameof(inAdminMode));
-                OnPropertyChanged(nameof(adminButtonText));
-            }
-
-        }
-
-        private void Exit() 
-        {
-            Application.Current.Shutdown();
-        }
     }
 }

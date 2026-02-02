@@ -10,20 +10,11 @@
 
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="30" />
             <RowDefinition/>
             
         </Grid.RowDefinitions>
 
-        <Menu Grid.Row="0">
-            <MenuItem Header="File" FontSize="16">
-                <MenuItem Header="Add Game" Command="{Binding AddGameCommand}" IsEnabled="{Binding inAdminMode}"/>
-                <MenuItem Header="Exit" Command="{Binding ExitCommand}" IsEnabled="{Binding inAdminMode}"/>
-            </MenuItem>
-            <MenuItem Header="Edit" FontSize="16">
-                <MenuItem Header="{Binding adminButtonText }" Command="{Binding SwitchAdminCommand}"/>
-            </MenuItem>
-        </Menu>
+        
 
         <ItemsControl Grid.Row="1" ItemsSource="{Binding Games}">
             <ItemsControl.ItemsPanel>

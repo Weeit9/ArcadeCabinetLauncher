@@ -19,7 +19,6 @@ namespace ArcadeCabinetLauncher.ViewModels
         public MainView()
         {
             InitializeComponent();
-            DataContext = new MainViewModel();
         }
     }
 }

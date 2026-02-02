@@ -6,9 +6,28 @@
         xmlns:local="clr-namespace:ArcadeCabinetLauncher"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800" WindowStyle="None" ResizeMode="NoResize">
-    
+
     <Grid>
-        <Frame Grid.Row="0" x:Name="MainFrame" NavigationUIVisibility="Hidden" />
+        <Grid.RowDefinitions>
+            <RowDefinition Height="30"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        
+        <Menu Grid.Row="0">
+            <MenuItem Header="File" FontSize="16">
+                <MenuItem Header="Add Game" Command="{Binding AddGameCommand}" IsEnabled="{Binding inAdminMode}"/>
+                <MenuItem Header="Exit" Command="{Binding ExitCommand}" IsEnabled="{Binding inAdminMode}"/>
+            </MenuItem>
+            <MenuItem Header="Edit" FontSize="16">
+                <MenuItem Header="{Binding adminButtonText }" Command="{Binding SwitchAdminCommand}"/>
+            </MenuItem>
+        </Menu>
+
+        <Frame Grid.Row="1" x:Name="MainFrame"
+               NavigationUIVisibility="Hidden">
+            
+        </Frame>
+        
     </Grid>
     
 </Window>
