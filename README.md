@@ -74,8 +74,4 @@ Download the latest release.
 Extract the zip file.
 Run the executable inside the extracted folder.
 
-```bash
-# Example placeholder
-git clone https://github.com/yourusername/arcade-cabinet-launcher.git
-cd arcade-cabinet-launcher
-# build instructions here
+
