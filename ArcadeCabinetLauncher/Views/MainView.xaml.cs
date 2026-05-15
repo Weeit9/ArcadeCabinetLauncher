@@ -19,6 +19,18 @@ namespace ArcadeCabinetLauncher.ViewModels
         public MainView()
         {
             InitializeComponent();
+            DataContext = new MainViewModel();
+        }
+
+        private void ListView_MouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            if (sender is ListView list && list.DataContext is MainViewModel vm)
+            {
+                if (!vm.GameRunning && vm.SelectedGame != null)
+                {
+                    vm.StartGameCommand.Execute(vm.SelectedGame);
+                }
+            }
         }
     }
 }

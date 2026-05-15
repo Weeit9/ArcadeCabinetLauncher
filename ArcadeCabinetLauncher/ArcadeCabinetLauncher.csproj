@@ -8,4 +8,38 @@
     <UseWPF>true</UseWPF>
   </PropertyGroup>
 
+  <ItemGroup>
+    <None Remove="Resources\Fonts\BebasNeue-Regular.ttf" />
+    <None Remove="Resources\Images\Arrow.png" />
+    <None Remove="Resources\Images\Edit.png" />
+    <None Remove="Resources\Images\Feedback.png" />
+    <None Remove="Resources\Images\HiddenEye.jpg" />
+    <None Remove="Resources\Images\HiddenEye.png" />
+    <None Remove="Resources\Images\Play.png" />
+    <None Remove="Resources\Images\RedX.png" />
+    <None Remove="Resources\Images\Remove.png" />
+    <None Remove="Resources\Images\ShowingEye.jpg" />
+    <None Remove="Resources\Images\ShowingEye.png" />
+    <None Remove="Resources\Images\UnrealEngine.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Resources\Images\Feedback.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Resources\Fonts\BebasNeue-Regular.ttf">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\Images\Arrow.png" />
+    <Resource Include="Resources\Images\Edit.png" />
+    <Resource Include="Resources\Images\HiddenEye.png" />
+    <Resource Include="Resources\Images\Play.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\Images\Remove.png" />
+    <Resource Include="Resources\Images\ShowingEye.png" />
+    <Resource Include="Resources\Images\UnrealEngine.png" />
+  </ItemGroup>
+
 </Project>

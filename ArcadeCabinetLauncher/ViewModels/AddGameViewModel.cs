@@ -12,23 +12,40 @@ namespace ArcadeCabinetLauncher.ViewModels
 {
     class AddGameViewModel : ViewModelBase
     {
+        private GameEntry? _editingGame;
+        public bool isEditMode => _editingGame != null;
         public string Name { get; set; } = "";
         public string GameMaker { get; set; } = "";
+        public string Controller { get; set; } = "";
         public string ExecutablePath { get; set; } = "";
         public string ThumbnailPath { get; set; } = "";
         public string Description { get; set; } = "";
+        public string Year { get; set; } = ""; 
 
         public ICommand BrowseExeCommand { get; }
         public ICommand BrowseThumbnailCommand { get; }
         public ICommand SaveCommand { get; }
         public ICommand CancelCommand { get; }
 
-        public AddGameViewModel()
+        public AddGameViewModel(GameEntry? gameToEdit = null)
         {
             BrowseExeCommand = new RelayCommand(BrowseExe);
             BrowseThumbnailCommand = new RelayCommand(BrowseThumbnail);
             SaveCommand = new RelayCommand(Save);
             CancelCommand = new RelayCommand(Cancel);
+
+            if (gameToEdit != null)
+            {
+                _editingGame = gameToEdit;
+
+                Name = gameToEdit.Name;
+                GameMaker = gameToEdit.GameMaker;
+                Controller = gameToEdit.Controller;
+                ExecutablePath = gameToEdit.ExecutablePath;
+                ThumbnailPath = gameToEdit.ThumbnailPath;
+                Description = gameToEdit.Description;
+                Year = gameToEdit.Year;
+            }
         }
 
         public GameEntry? Result { get; private set; }
@@ -73,15 +90,33 @@ namespace ArcadeCabinetLauncher.ViewModels
         public event Action<bool>? RequestClose;
         private void Save()
         {
-
-            Result = new GameEntry
+            if (isEditMode && _editingGame != null)
             {
-                Name = Name,
-                GameMaker = GameMaker,
-                ExecutablePath = ExecutablePath,
-                ThumbnailPath = ThumbnailPath,
-                Description = Description
-            };
+                // Update existing object
+                _editingGame.Name = Name;
+                _editingGame.GameMaker = GameMaker;
+                _editingGame.Controller = Controller;
+                _editingGame.ExecutablePath = ExecutablePath;
+                _editingGame.ThumbnailPath = ThumbnailPath;
+                _editingGame.Description = Description;
+                _editingGame.Year = Year;
+
+                Result = _editingGame;
+            }
+            else
+            {
+                // Create new
+                Result = new GameEntry
+                {
+                    Name = Name,
+                    GameMaker = GameMaker,
+                    Controller = Controller,
+                    ExecutablePath = ExecutablePath,
+                    ThumbnailPath = ThumbnailPath,
+                    Description = Description,
+                    Year = Year
+                };
+            }
 
             RequestClose?.Invoke(true);
         }

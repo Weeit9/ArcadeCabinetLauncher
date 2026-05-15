@@ -5,34 +5,62 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ArcadeCabinetLauncher.Windows"
         mc:Ignorable="d"
-        Title="AddGameWindow" Height="450" Width="800">
-    <Grid>
-        <StackPanel Margin="16">
-            <TextBlock Text="Game Name"/>
-            <TextBox Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}"/>
+        WindowStyle="None"
+        Height="600" Width="800"
+        WindowStartupLocation="CenterOwner"
+        Background="#1b1c1c">
 
-            <TextBlock Text="Game Maker Name"/>
-            <TextBox Text="{Binding GameMaker, UpdateSourceTrigger=PropertyChanged}"/>
+    <Border Style="{StaticResource WindowBorderStyle}">
+        <Grid>
+            <StackPanel Margin="16">
+                <TextBlock Text="Game Name" Style="{StaticResource TextBlockStyle}"/>
+                <TextBox Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource TextBoxStyle}" Margin="0, 0, 0, 10"/>
 
-            <TextBlock Text="Executable"/>
-            <StackPanel Orientation="Horizontal">
-                <TextBlock Text="{Binding ExecutablePath}" Width="250"/>
-                <Button Content="Browse" Command="{Binding BrowseExeCommand}"/>
+                <TextBlock Text="Game Developer Name" Style="{StaticResource TextBlockStyle}"/>
+                <TextBox Text="{Binding GameMaker, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource TextBoxStyle}" Margin="0, 0, 0, 10"/>
+
+                <TextBlock Text="Controller Type" Style="{StaticResource TextBlockStyle}"/>
+                <TextBox Text="{Binding Controller, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource TextBoxStyle}" Margin="0, 0, 0, 10"/>
+
+                <TextBlock Text="Executable" Style="{StaticResource TextBlockStyle}"/>
+                <StackPanel Orientation="Horizontal" Margin="0, 0, 0, 10">
+                    <TextBlock Text="{Binding ExecutablePath}" Style="{StaticResource TextBlockStyle}" Width="250"/>
+                    <Button Content="Browse" Command="{Binding BrowseExeCommand}" Style="{StaticResource OtherButtonStyle}"/>
+                </StackPanel>
+
+                <TextBlock Text="Thumbnail" Style="{StaticResource TextBlockStyle}"/>
+                <StackPanel Orientation="Horizontal" Margin="0, 0, 0, 10">
+                    <TextBlock Text="{Binding ThumbnailPath}" Width="250" Style="{StaticResource TextBlockStyle}"/>
+                    <Button Content="Browse" Command="{Binding BrowseThumbnailCommand}" Style="{StaticResource OtherButtonStyle}"/>
+                </StackPanel>
+
+                <TextBlock Text="Description" Style="{StaticResource TextBlockStyle}"/>
+                <TextBox Text="{Binding Description}" AcceptsReturn="True" Height="80" Style="{StaticResource TextBoxStyle}" Margin="0, 0, 0, 10"/>
+
+                <TextBlock Text="Year of Developement" Style="{StaticResource TextBlockStyle}"/>
+                <TextBox Text="{Binding Year, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource TextBoxStyle}" Margin="0, 0, 0, 10" />
+
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                    <Button Content="Cancel" Command="{Binding CancelCommand}" Style="{StaticResource OtherButtonStyle}"
+                            Margin="8" 
+                            HorizontalContentAlignment="Center"
+                            VerticalContentAlignment="Center"
+                            Height="40"
+                            Width="80"
+                            FontSize="16"
+                            />
+                    
+                    <Button Content="Save" Command="{Binding SaveCommand}" Style="{StaticResource GreenButtonStyle}" 
+                            Margin="8" 
+                            HorizontalContentAlignment="Center"
+                            VerticalContentAlignment="Center"
+                            Height="40"
+                            Width="80"
+                            FontSize="16"
+                            />
+                    
+                </StackPanel>
             </StackPanel>
-
-            <TextBlock Text="Thumbnail"/>
-            <StackPanel Orientation="Horizontal">
-                <TextBlock Text="{Binding ThumbnailPath}" Width="250"/>
-                <Button Content="Browse" Command="{Binding BrowseThumbnailCommand}"/>
-            </StackPanel>
-
-            <TextBlock Text="Description"/>
-            <TextBox Text="{Binding Description}" AcceptsReturn="True" Height="80"/>
-
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                <Button Content="Cancel" Command="{Binding CancelCommand}"/>
-                <Button Content="Save" Command="{Binding SaveCommand}" Margin="8,0,0,0"/>
-            </StackPanel>
-        </StackPanel>
-    </Grid>
+        </Grid>
+    </Border>
 </Window>

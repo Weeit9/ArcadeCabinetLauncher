@@ -18,19 +18,23 @@ namespace ArcadeCabinetLauncher
     /// </summary>
     public partial class MainWindow : Window
     {
-        private MainWindowViewModel ViewModel { get; }
         public MainWindow()
         {
             InitializeComponent();
-            ViewModel = new MainWindowViewModel();
-            DataContext = ViewModel;
+            Closing += MainWindow_Closing;
 
-            MainFrame.Navigate(new MainView
-            {
-                DataContext = new MainViewModel(ViewModel)
-            });
+            MainFrame.Navigate(new MainView());
         }
 
-        
+        private void MainWindow_Closing(object? sender, CancelEventArgs e)
+        {
+            e.Cancel = true;
+        }
+
+        protected override void OnStateChanged(EventArgs e)
+        {
+            if (WindowState == WindowState.Minimized)
+                WindowState = WindowState.Normal;
+        }
     }
 }

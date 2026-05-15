@@ -6,64 +6,640 @@
       xmlns:local="clr-namespace:ArcadeCabinetLauncher.ViewModels"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
-      Title="MainView">
+      Title="MainView" Background="#1b1c1c">
+
+
 
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition/>
-            
+            <RowDefinition Height="30"/>
+            <RowDefinition Height="2*"/>
+            <RowDefinition Height="30"/>
+            <RowDefinition Height="8*"/>
+
         </Grid.RowDefinitions>
 
-        
+        <Menu Foreground="White" Background="black" Grid.Row="0">
+            <MenuItem Header="File" FontSize="16">
+                <MenuItem Background="Black" Header="Add Game" Command="{Binding AddGameCommand}" IsEnabled="{Binding inAdminMode}"/>
+                <MenuItem Background="Black" Header="Scan Games" Command="{Binding ScanGamesCommand}" IsEnabled="{Binding inAdminMode}"/>
+                <MenuItem Background="Black" Header="Clear Games" Command="{Binding ClearGamesCommand}" IsEnabled="{Binding inAdminMode}"/>
+                <MenuItem Background="Black" Header="Hide All Games" Command="{Binding HideAllGamesCommand}" IsEnabled="{Binding inAdminMode}"/>
+                <MenuItem Background="Black" Header="Show All Games" Command="{Binding ShowAllGamesCommand}" IsEnabled="{Binding inAdminMode}"/>
+                <MenuItem Background="Black" Header="Exit" Command="{Binding ExitCommand}" IsEnabled="{Binding inAdminMode}"/>
+            </MenuItem>
+            <MenuItem Header="Edit" FontSize="16">
+                <MenuItem Background="Black" Header="{Binding adminButtonText }" Command="{Binding SwitchAdminCommand}"/>
+            </MenuItem>
+            <MenuItem Header="View" FontSize="16">
+                <MenuItem Background="Black" Header="Card View" Command="{Binding ShowCardViewCommand}" IsEnabled="{Binding inAdminMode}"/>
+                <MenuItem Background="Black" Header="List View" Command="{Binding ShowListViewCommand}" IsEnabled="{Binding inAdminMode}"/>
+                <MenuItem Background="Black" Header="Game Name" Command="{Binding SwitchGameNameVisibilityCommand}" IsEnabled="{Binding inAdminMode}" IsCheckable="True" IsChecked="True"/>
+                <MenuItem Background="Black" Header="Developer" Command="{Binding SwitchDeveloperNameVisibilityCommand}" IsEnabled="{Binding inAdminMode}" IsCheckable="True" IsChecked="True"/>
+                <MenuItem Background="Black" Header="Controller Type" Command="{Binding SwitchControllerVisibilityCommand}" IsEnabled="{Binding inAdminMode}" IsCheckable="True" IsChecked="True"/>
+                <MenuItem Background="Black" Header="Game Description" Command="{Binding SwitchDescriptionVisibilityCommand}" IsEnabled="{Binding inAdminMode}" IsCheckable="True" IsChecked="True"/>
+                <MenuItem Background="Black" Header="Year of Release" Command="{Binding SwitchYearVisibilityCommand}" IsEnabled="{Binding inAdminMode}" IsCheckable="True" IsChecked="True"/>
+            </MenuItem>
+        </Menu>
 
-        <ItemsControl Grid.Row="1" ItemsSource="{Binding Games}">
-            <ItemsControl.ItemsPanel>
+        <Grid Grid.Row="1" Margin="0, 20, 0, 30">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="1*"/>
+                <RowDefinition Height="9*"/>
+                <RowDefinition Height="1*"/>
+            </Grid.RowDefinitions>
+
+            <Rectangle Grid.Row="0" Fill="#ffcd00"/>
+            <Rectangle Grid.Row="1" Fill="#115740"/>
+            <Viewbox Grid.Row="1" Stretch="Uniform" StretchDirection="DownOnly">
+                <TextBox IsReadOnly="{Binding inAdminMode, Converter={StaticResource BoolInverter}}"
+                         Text="ATU ARCADE CABINET LAUNCHER" 
+                         HorizontalAlignment="Center" 
+                         VerticalAlignment="Center" 
+                         FontFamily="/Fonts/#Bebas Neue" 
+                         FontWeight="Bold"
+                         FontSize="96"
+                         Foreground="White" 
+                         Background="Transparent"
+                         BorderThickness="0"
+                         >
+                    <TextBox.Effect>
+                        <DropShadowEffect Color="Black"
+                                          BlurRadius="0"
+                                          ShadowDepth="5"
+                                          Opacity="1"
+                                          />
+                    </TextBox.Effect>
+                </TextBox>
+            </Viewbox>
+
+            <Rectangle Grid.Row="2" Fill="#ffcd00"/>
+
+        </Grid>
+
+        <ListView BorderThickness="0" Margin="10px" Grid.Row="3"
+          ItemsSource="{Binding GamesView}"
+          SelectedItem="{Binding SelectedGame}"
+          ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+          ScrollViewer.VerticalScrollBarVisibility="Hidden"
+          Background="#1b1c1c"
+          HorizontalContentAlignment="Center"
+          HorizontalAlignment="Stretch"
+          MouseDoubleClick="ListView_MouseDoubleClick"
+          ItemContainerStyle="{StaticResource ListViewCard}"
+          >
+            <ListView.Style>
+                <Style TargetType="ListView">
+                    <Setter Property="Visibility" Value="Collapsed"/>
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding CurrentView}" Value="Card">
+                            <Setter Property="Visibility" Value="Visible"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </ListView.Style>
+
+            <ListView.ItemsPanel>
                 <ItemsPanelTemplate>
-                    <WrapPanel />
+                    <WrapPanel
+                        Orientation="Horizontal"
+                        HorizontalAlignment="Center"
+                        Width="{Binding ActualWidth,
+                        RelativeSource={RelativeSource AncestorType=ListView}}"
+                        />
                 </ItemsPanelTemplate>
-            </ItemsControl.ItemsPanel>
+            </ListView.ItemsPanel>
+            
+            
 
-            <ItemsControl.ItemTemplate>
+            <ListView.ItemTemplate>
                 <DataTemplate>
-                    <Grid ShowGridLines="True">
+                    <Border
+                        Width="300"
+                        Height="500"
+                        Margin="10"
+                        CornerRadius="12"
+                        Background="#262626">
+
+                        <Grid>
+
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="220"/>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="60"/>
+                                <RowDefinition Height="60"/>
+                            </Grid.RowDefinitions>
+
+                            <!-- Thumbnail -->
+                            <Grid Grid.Row="0">
+                                <Border Name="mask" Background="White" CornerRadius="10"/>
+                                <Image Source="{Binding DisplayThumbnailPath}" Stretch="Fill">
+                                    <Image.OpacityMask>
+                                        <VisualBrush Visual="{Binding ElementName=mask}"/>
+                                    </Image.OpacityMask>
+                                </Image>
+                                 
+                                <Button
+                                    Command="{Binding DataContext.StartGameCommand,
+                                    RelativeSource={RelativeSource AncestorType=ListView}}"
+                                    CommandParameter="{Binding}"
+                                    Background="#66000000"
+                                    BorderThickness="0"
+                                    Style="{StaticResource FlatButton}">
+
+                                    <Image
+                                        Source="/Resources/Images/Play.png"
+                                        Width="80"
+                                        Height="80"
+                                        >
+                                        <Image.Style>
+                                            <Style TargetType="Image">
+
+                                                <Setter Property="Opacity" Value="0"/>
+
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding IsMouseOver,
+                                                        RelativeSource={RelativeSource AncestorType=Button}}" Value="True">
+                                                        <Setter Property="Opacity" Value="1"/>
+                                                    </DataTrigger>
+                                                 </Style.Triggers>
+                                            </Style>
+                                        </Image.Style>
+                                    </Image>
+                                </Button>
+
+                            </Grid>
+
+                            <!-- Info -->
+                            <StackPanel Grid.Row="1" Margin="10">
+
+                                <TextBlock
+                                    Text="{Binding Name}"
+                                    Visibility="{Binding DataContext.isGameNameVisible, Converter={StaticResource BoolToVisibilityConverter}, RelativeSource={RelativeSource AncestorType=ListView}}"
+                                    FontSize="22"
+                                    FontWeight="Bold"
+                                    Foreground="White"/>
+
+                                <TextBlock
+                                    Text="{Binding GameMaker}"
+                                    Visibility="{Binding DataContext.isDeveloperNameVisible, Converter={StaticResource BoolToVisibilityConverter}, RelativeSource={RelativeSource AncestorType=ListView}}"
+                                    Foreground="#BBBBBB"/>  
+
+                                <TextBlock
+                                    Text="{Binding Controller}"
+                                    Visibility="{Binding DataContext.isControllerVisible, Converter={StaticResource BoolToVisibilityConverter}, RelativeSource={RelativeSource AncestorType=ListView}}"
+                                    Foreground="#BBBBBB"/>
+
+                                <TextBlock
+                                    Text="{Binding Description}"
+                                    Visibility="{Binding DataContext.isDescriptionVisible, Converter={StaticResource BoolToVisibilityConverter}, RelativeSource={RelativeSource AncestorType=ListView}}"
+                                    TextWrapping="Wrap"
+                                    FontSize="12"
+                                    Foreground="#DDDDDD"
+                                    MaxHeight="60"/>
+                                
+                                <TextBlock
+                                    Text="{Binding Year}"
+                                    Visibility="{Binding DataContext.isYearVisible, Converter={StaticResource BoolToVisibilityConverter}, RelativeSource={RelativeSource AncestorType=ListView}}"
+                                    TextWrapping="Wrap"
+                                    FontSize="12"
+                                    Foreground="#DDDDDD"
+                                    MaxHeight="60"/>
+
+                            </StackPanel>
+
+                            <!-- Bottom Buttons -->
+                            <StackPanel
+                                Grid.Row="2"
+                                Orientation="Horizontal"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center">
+
+                                <Button
+                                    Content="Play"
+                                    Margin="6"
+                                    Width="100"
+                                    Height="50"
+                                    FontSize="24"
+                                    Style="{StaticResource GreenButtonStyle}"
+                                    Command="{Binding DataContext.StartGameCommand,
+                                    RelativeSource={RelativeSource AncestorType=ListView}}"
+                                    CommandParameter="{Binding}"
+                                    IsEnabled="{Binding DataContext.GameRunning,
+                                    Converter={StaticResource BoolInverter},
+                                    RelativeSource={RelativeSource AncestorType=ItemsControl}}"/>
+
+                                <Button
+                                    Content="Feedback"
+                                    Margin="6"
+                                    Width="100"
+                                    Height="50"
+                                    FontSize="16"
+                                    Style="{StaticResource OtherButtonStyle}"
+                                    Command="{Binding DataContext.LeaveFeedbackCommand,
+                                    RelativeSource={RelativeSource AncestorType=ListView}}"
+                                    CommandParameter="{Binding}"/>
+
+                            </StackPanel>
+
+                            <StackPanel
+                                Grid.Row="3"
+                                Orientation="Horizontal"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                Visibility="{Binding DataContext.inAdminMode, Converter={StaticResource BoolToVisibilityConverter}, RelativeSource={RelativeSource AncestorType=ListView}}">
+
+
+                                <Button
+                                    Margin="6"
+                                    Style="{StaticResource IconButton}"
+                                    Command="{Binding DataContext.RemoveGameCommand,
+                                    RelativeSource={RelativeSource AncestorType=ListView}}"
+                                    CommandParameter="{Binding}">
+                                    
+                                    
+                                    <Image
+                                        Source="/Resources/Images/Remove.png"
+                                        Height="40"
+                                        Width="40"/>
+                                </Button>
+
+                                <Button
+                                    Margin="6"
+                                    Style="{StaticResource IconButton}"
+                                    Command="{Binding DataContext.HideGameCommand,
+                                    RelativeSource={RelativeSource AncestorType=ListView}}"
+                                    CommandParameter="{Binding}">
+
+                                    <Image>
+                                        <Image.Style>
+                                            <Style TargetType="Image">
+                                                <Setter Property="Height" Value="40"/>
+                                                <Setter Property="Width" Value="40"/>
+                                                <Setter Property="Source" Value="/Resources/Images/ShowingEye.png" />
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding isHidden}" Value="True">
+                                                        <Setter Property="Source" Value="/Resources/Images/HiddenEye.png" />
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </Image.Style>
+                                    </Image>
+                                </Button>
+
+                                <Button
+                                    Margin="6"
+                                    Style="{StaticResource IconButton}"
+                                    Command="{Binding DataContext.EditGameCommand,
+                                    RelativeSource={RelativeSource AncestorType=ListView}}"
+                                    CommandParameter="{Binding}">
+                                    
+                                    <Image
+                                        Source="/Resources/Images/Edit.png"
+                                        Height="40"
+                                        Width="40"/>
+                                </Button>
+
+                                <Button
+                                    Margin="6"
+                                    Style="{StaticResource IconButton}"
+                                    Command="{Binding DataContext.OneGameViewCommand,
+                                    RelativeSource={RelativeSource AncestorType=ListView}}"
+                                    CommandParameter="{Binding}">     
+                                    
+                                    <Image
+                                        Source="/Resources/Images/Arrow.png"
+                                        Height="40"
+                                        Width="40"/>
+                                </Button>
+
+
+                            </StackPanel>
+
+                        </Grid>
+                    </Border>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+
+
+
+        <ListView  BorderThickness="0" Margin="10px" Grid.Row="3"
+           ItemsSource="{Binding GamesView}"
+           SelectedItem="{Binding SelectedGame}"
+           Background="#1b1c1c"
+           HorizontalContentAlignment="Stretch"
+           MouseDoubleClick="ListView_MouseDoubleClick">
+
+            <ListView.Style>
+                <Style TargetType="ListView">
+                    <Setter Property="Visibility" Value="Collapsed"/>
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding CurrentView}" Value="List">
+                            <Setter Property="Visibility" Value="Visible"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </ListView.Style>
+
+            <ListView.ItemContainerStyle>
+                <Style TargetType="ListViewItem">
+                    <Setter Property="Height" Value="156"/>
+                    <Setter Property="Margin" Value="6"/>
+                    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                    <Setter Property="Background" Value="#1b1c1c"/>
+                    <Setter Property="BorderThickness" Value="2"/>
+                    <Setter Property="BorderBrush" Value="Transparent"/>
+
+                    <Style.Triggers>
+                        <Trigger Property="IsSelected" Value="True">
+                            <Setter Property="BorderBrush" Value="#115740"/>
+                            <Setter Property="Background" Value="#2a2a2a"/>
+                        </Trigger>
+
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Background" Value="#333"/>
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </ListView.ItemContainerStyle>
+
+
+            <ListView.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <VirtualizingStackPanel />
+                </ItemsPanelTemplate>
+            </ListView.ItemsPanel>
+
+
+
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <Grid Background="#262626" Height="140" >
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="50"/>
-                            <ColumnDefinition Width="100"/>
-                            <ColumnDefinition Width="100"/>
-                            <ColumnDefinition Width="500"/>
-                            <ColumnDefinition Width="50"/>
+                            <ColumnDefinition Width="140"/>
+
+                            <ColumnDefinition Width="200"/>
+
+                            <ColumnDefinition Width="3*"/>
+
+                            <ColumnDefinition Width="140"/>
+                            <ColumnDefinition Width="140"/>
                         </Grid.ColumnDefinitions>
 
-                        <Button Grid.Column="0"
-                        Width="48"
-                        Height="48"
-                        Padding="0"
-                        Background="Transparent"
-                        Command="{Binding DataContext.StartGameCommand,
-                        RelativeSource={RelativeSource AncestorType=ItemsControl}}"
-                        CommandParameter="{Binding}">
-                            <Image Source="{Binding ThumbnailPath}" Stretch="Uniform" IsHitTestVisible="False"></Image>
+                        <Button 
+                     Command="{Binding DataContext.StartGameCommand,
+                     RelativeSource={RelativeSource AncestorType=ItemsControl}}"
+                     CommandParameter="{Binding}"
+                     IsEnabled="{Binding DataContext.GameRunning,
+                     Converter={StaticResource BoolInverter},
+                     RelativeSource={RelativeSource AncestorType=ItemsControl}}">
+                            <Grid>
+                                <Image Source="{Binding DisplayThumbnailPath}" Stretch="Uniform" IsHitTestVisible="False"></Image>
+                                <Image Source="/Resources/Images/Play.png" Stretch="Uniform" IsHitTestVisible="False"></Image>
+
+                            </Grid>
                         </Button>
+                        
+                        <StackPanel Grid.Column="1" Margin="10">
 
-                        <TextBlock Grid.Column="1" Text="{Binding Name}" Padding="10"/>
+                            <TextBlock
+                                Text="{Binding Name}"
+                                Visibility="{Binding DataContext.isGameNameVisible, Converter={StaticResource BoolToVisibilityConverter}, RelativeSource={RelativeSource AncestorType=ListView}}"
+                                FontSize="22"
+                                FontWeight="Bold"
+                                Foreground="White"/>
 
-                        <TextBlock Grid.Column="2" Text="{Binding GameMaker}" Padding="10"/>
+                            <TextBlock
+                                Text="{Binding GameMaker}"
+                                Visibility="{Binding DataContext.isDeveloperNameVisible, Converter={StaticResource BoolToVisibilityConverter}, RelativeSource={RelativeSource AncestorType=ListView}}"
+                                Foreground="#BBBBBB"/>
 
-                        <TextBlock Grid.Column="3" Text="{Binding Description}" Padding="10"/>
+                            <TextBlock
+                                Text="{Binding Controller}"
+                                Visibility="{Binding DataContext.isControllerVisible, Converter={StaticResource BoolToVisibilityConverter}, RelativeSource={RelativeSource AncestorType=ListView}}"
+                                Foreground="#BBBBBB"/>
 
-                        <Button Grid.Column="4"
-                        Width="48"
-                        Height="48"
-                        Padding="0"
-                        Background="Transparent"
-                        IsEnabled="{Binding DataContext.inAdminMode, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
-                        Command="{Binding DataContext.RemoveGameCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
-                        CommandParameter="{Binding}">
-                           
+                            <TextBlock
+                                Text="{Binding Year}"
+                                Visibility="{Binding DataContext.isYearVisible, Converter={StaticResource BoolToVisibilityConverter}, RelativeSource={RelativeSource AncestorType=ListView}}"
+                                TextWrapping="Wrap"
+                                FontSize="12"
+                                Foreground="#DDDDDD"
+                                MaxHeight="60"/>
+
+                        </StackPanel>
+
+                        <TextBlock Foreground="White" Grid.Column="2" Text="{Binding Description}" Padding="10" HorizontalAlignment="Left" Style="{StaticResource TextBlockStyle}"
+                                   Visibility="{Binding DataContext.isDescriptionVisible, Converter={StaticResource BoolToVisibilityConverter}, RelativeSource={RelativeSource AncestorType=ListView}}"
+                                   />
+
+                        <Grid Grid.Column="3" Visibility="{Binding DataContext.inAdminMode, RelativeSource={RelativeSource AncestorType=ItemsControl},Converter={StaticResource BoolToVisibilityConverter}}" >
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="64"/>
+                                <ColumnDefinition Width="64"/>
+                            </Grid.ColumnDefinitions>
+
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="64"/>
+                                <RowDefinition Height="64"/>
+                            </Grid.RowDefinitions>
+
+                            <Button Grid.Column="0" Grid.Row="0" BorderThickness="0" 
+                         Width="48"
+                         Height="48"
+                         Padding="0"
+                         Background="Transparent"
+                         IsEnabled="{Binding DataContext.inAdminMode, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
+                         Command="{Binding DataContext.RemoveGameCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
+                         CommandParameter="{Binding}">
+                                <Image Source="/Resources/Images/Remove.png" Stretch="Uniform" IsHitTestVisible="False"/>
+                            </Button>
+
+                            <Button Grid.Column="1" Grid.Row="0" BorderThickness="0" 
+                         Width="48"
+                         Height="48"
+                         Padding="0"
+                         Background="Transparent"
+                         IsEnabled="{Binding DataContext.inAdminMode, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
+                         Command="{Binding DataContext.HideGameCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
+                         CommandParameter="{Binding}">
+                                <Image>
+                                    <Image.Style>
+                                        <Style TargetType="Image">
+                                            <Setter Property="Source" Value="/Resources/Images/ShowingEye.png" />
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding isHidden}" Value="True">
+                                                    <Setter Property="Source" Value="/Resources/Images/HiddenEye.png" />
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Image.Style>
+                                </Image>
+                            </Button>
+
+                            <Button Grid.Column="0" Grid.Row="1" BorderThickness="0" 
+                         Width="48"
+                         Height="48"
+                         Padding="0"
+                         Background="Transparent"
+                         IsEnabled="{Binding DataContext.inAdminMode, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
+                         Command="{Binding DataContext.EditGameCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
+                         CommandParameter="{Binding}">
+                                <Image Source="/Resources/Images/Edit.png" Stretch="Uniform" IsHitTestVisible="False"/>
+                            </Button>
+
+                            <Button Grid.Column="1" Grid.Row="1" BorderThickness="0" 
+                         Width="48"
+                         Height="48"
+                         Padding="0"
+                         Background="Transparent"
+                         IsEnabled="{Binding DataContext.inAdminMode, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
+                         Command="{Binding DataContext.OneGameViewCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
+                         CommandParameter="{Binding}">
+                                <Image Source="/Resources/Images/Arrow.png" Stretch="Uniform" IsHitTestVisible="False"/>
+                            </Button>
+
+                        </Grid>
+
+                        <Button BorderThickness="0" Grid.Column="7" 
+                     Width="128"
+                     Height="128"
+                     Padding="0"
+                     Background="Transparent"
+                     Command="{Binding DataContext.LeaveFeedbackCommand,
+                     RelativeSource={RelativeSource AncestorType=ItemsControl}}"
+                     CommandParameter="{Binding}">
+                            <Image Source="/Resources/Images/Feedback.png" Stretch="Uniform" IsHitTestVisible="False"/>
                         </Button>
                     </Grid>
                 </DataTemplate>
-            </ItemsControl.ItemTemplate>
-        </ItemsControl>
+            </ListView.ItemTemplate>
+        </ListView>
+
+
+
+        <Grid  Grid.Row="3" Background="#1E1E1E">
+            <Grid.Style>
+                <Style TargetType="Grid">
+                    <Setter Property="Visibility" Value="Collapsed"/>
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding CurrentView}" Value="SingleGame">
+                            <Setter Property="Visibility" Value="Visible"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Grid.Style>
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="30"/>
+            </Grid.RowDefinitions>
+
+            <!-- TOP BAR -->
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="30"/>
+                <ColumnDefinition Width="20*"/>
+                <ColumnDefinition Width="40*"/>
+                <ColumnDefinition Width="20*"/>
+                <ColumnDefinition Width="30"/>
+            </Grid.ColumnDefinitions>
+
+                <!-- BACK BUTTON -->
+            <Button Content="← Back"
+                Command="{Binding BackCommand}"
+                Visibility="{Binding inAdminMode, Converter={StaticResource BoolToVisibilityConverter}}"
+                FontSize="64"
+                Background="#333"
+                Foreground="White"
+                BorderBrush="#555"
+                Height="100"
+                Width="300"
+                VerticalAlignment="Bottom"
+                HorizontalAlignment="Left"       
+                Grid.Column="1"
+                Grid.Row="3"
+                Style="{StaticResource OtherButtonStyle}"/>
+
+            <!-- PLAY BUTTON -->
+
+            <StackPanel Grid.Column="3" Grid.Row="1" Grid.RowSpan="2">
+            <Button Content="Play ▶"
+                Command="{Binding StartGameCommand}"
+                CommandParameter="{Binding OneViewGame}"
+                Margin="30"
+                FontSize="64"
+                Height="150"
+                Width="400"
+                IsEnabled="{Binding GameRunning, Converter={StaticResource BoolInverter}}"
+                Style="{StaticResource GreenButtonStyle}"/>
+
+            <Button Content="Feedback"
+                Command="{Binding LeaveFeedbackCommand}"
+                CommandParameter="{Binding OneViewGame}"
+                Margin="30"
+                FontSize="64"
+                Height="150"
+                Width="400"
+                Style="{StaticResource OtherButtonStyle}"/>
+
+            </StackPanel>
+
+
+            <!-- GAME IMAGE -->
+                <Border Grid.Column="1"
+                        Grid.Row="1"
+                CornerRadius="12"
+                Background="#2D2D2D"
+                Padding="10">
+                    <Image Source="{Binding OneViewGame.DisplayThumbnailPath}"
+                   Stretch="Uniform"
+                   Height="400"/>
+                </Border>
+
+                <!-- GAME DETAILS -->
+            <StackPanel Grid.Column="2"
+                        Grid.Row="1"
+                        VerticalAlignment="Top" 
+                        Margin="30, 0, 30, 0">
+
+                <!-- NAME -->
+                <TextBlock Text="{Binding OneViewGame.Name}"
+                       FontSize="48"
+                       FontWeight="Bold"
+                       Foreground="White"
+                       Margin="0,0,0,10"/>
+
+                <!-- MAKER + YEAR -->
+                <TextBlock FontSize="32"
+                       Foreground="#BBBBBB"
+                       Margin="0,0,0,5">
+                <Run Text="{Binding OneViewGame.GameMaker}"/>
+                <Run Text=" • "/>
+                <Run Text="{Binding OneViewGame.Year}"/>
+                </TextBlock>
+
+                <!-- CONTROLLER -->
+                <TextBlock Text="{Binding OneViewGame.Controller}"
+                       FontSize="32"
+                       Foreground="#BBBBBB"
+                       Margin="0,0,0,20"/>
+
+                <!-- DESCRIPTION -->
+                <TextBlock Text="{Binding OneViewGame.Description}"
+                       TextWrapping="Wrap"
+                       Foreground="#DDDDDD"
+                       FontSize="24"
+                       HorizontalAlignment="Left"/>
+
+            </StackPanel>
+
+
+
+        </Grid>
     </Grid>
 </Page>
